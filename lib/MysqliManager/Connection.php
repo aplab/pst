@@ -9,10 +9,15 @@
 namespace Aplab\Pst\Lib\MysqliManager;
 
 
-use App\Tools\Tools;
+use Aplab\Pst\Lib\Tools;
+use mysqli;
+use mysqli_driver;
+use mysqli_sql_exception;
+use stdClass;
 
-class Connection extends \mysqli
+class Connection extends mysqli
 {
+    /** @noinspection PhpMissingParentConstructorInspection */
     /**
      * Connection constructor.
      * @param MysqliManager $manager
@@ -21,7 +26,7 @@ class Connection extends \mysqli
     public function __construct(MysqliManager $manager, $name = MysqliManager::DEFAULT_CONNECTION_NAME)
     {
         $configuration = ($manager->getConfiguration())[$name];
-        $config = new \stdClass();
+        $config = new stdClass();
         $config->host = $configuration['host'] ?? $manager::DEFAULT_HOST;
         $config->port = $configuration['port'] ?? $manager::DEFAULT_PORT;
         $config->username = $configuration['username'];
@@ -31,7 +36,7 @@ class Connection extends \mysqli
         $config->persistent = $configuration['persistent'] ?? true;
         $config->charset = $configuration['charset'] ?? $manager::DEFAULT_CHARSET;
         $hash = spl_object_hash($this);
-        $driver = new \mysqli_driver();
+        $driver = new mysqli_driver();
         $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
         $this->{$hash}['driver'] = $driver;
         //$this->{$hash}['config'] = $config;
@@ -59,7 +64,7 @@ class Connection extends \mysqli
     }
 
     /**
-     * @return \mysqli_driver
+     * @return mysqli_driver
      */
     public function getDriver()
     {
@@ -90,14 +95,16 @@ class Connection extends \mysqli
             $this->real_query($sql);
             /** @noinspection PhpMethodParametersCountMismatchInspection */
             return new Result($this);
-        } catch (\mysqli_sql_exception $e) {
-            $e->sql = preg_replace('/\\s{2,}/', ' ', $sql);
-            $trace = $e->getTrace();
+        } catch (mysqli_sql_exception $e) {
+            /** @noinspection PhpUndefinedFieldInspection */
+            $e->sql   = preg_replace('/\\s{2,}/', ' ', $sql);
+            $trace    = $e->getTrace();
             $function = __FUNCTION__;
-            $class = get_class($this);
-            $break = false;
+            $class    = get_class($this);
+            $break    = false;
             foreach ($trace as $data_item) {
                 if ($break) {
+                    /** @noinspection PhpUndefinedFieldInspection */
                     $e->called_from = $data_item;
                     break;
                 }
