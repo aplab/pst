@@ -1,0 +1,28 @@
+{
+    "name": "aplab/pst",
+    "type": "library",
+    "description": "php small tools",
+    "keywords": ["php","mysqli","tools","util"],
+    "homepage": "https://aplab.ru",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alexander Polyanin",
+            "email": "polyanin@gmail.com",
+            "homepage": "https://aplab.ru",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.3.0"
+    },
+    "require-dev": {
+        "symfony/http-kernel": "^4.3"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Aplab\\Pst\\Lib\\": "lib/"
+        }
+    }
+}
