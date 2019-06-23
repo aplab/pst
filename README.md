@@ -16,3 +16,9 @@ add to services.yaml example
     Aplab\Pst\Lib\MysqliManager\MysqliManager:
         arguments: ['@kernel']
 ```
+
+## Configuration
+
+put .mysqli_manager.ini.dist into ```projectDir``` and then rename it to .mysqli_manager.ini 
+
+
