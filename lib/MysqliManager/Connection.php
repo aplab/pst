@@ -62,7 +62,7 @@ class Connection extends mysqli
                 $config->port
             );
         }
-        foreach ($config['init'] as $sql) {
+        foreach ($config->init as $sql) {
             $this->query($sql);
         }
         $this->select_db($config->dbname);
