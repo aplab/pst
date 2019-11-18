@@ -28,11 +28,6 @@ class MysqliManager
     /**
      * @var string
      */
-    const DEFAULT_CHARSET = 'utf8';
-
-    /**
-     * @var string
-     */
     const DEFAULT_CONNECTION_NAME = 'default';
 
     /**

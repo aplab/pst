@@ -1,3 +1,6 @@
+; This is a sample configuration file
+; Comments start with ';', as in php.ini
+
 [default]
 host="localhost"
 port="3306"
@@ -6,7 +9,8 @@ password="pass"
 socket=""
 dbname="testdb"
 persistent="true"
-charset="utf8"
+; init should be array or string
+init = SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'
 
 [secondary]
 host="localhost"
@@ -17,6 +21,7 @@ socket=""
 dbname="testdb"
 persistent="true"
 charset="utf8"
+init[] = SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'
 
 [other]
 host="localhost"
@@ -27,4 +32,4 @@ socket=""
 dbname="testdb"
 persistent="true"
 charset="utf8"
-
+init[] = SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci'

@@ -34,7 +34,10 @@ class Connection extends mysqli
         $config->socket = $configuration['socket'] ?? null;
         $config->dbname = $configuration['dbname'] ?? null;
         $config->persistent = $configuration['persistent'] ?? true;
-        $config->charset = $configuration['charset'] ?? $manager::DEFAULT_CHARSET;
+        $config->init = $configuration['init'] ?? [];
+        if (is_scalar($config->init)) {
+            $config->init = [$config['init']];
+        }
         $hash = spl_object_hash($this);
         $driver = new mysqli_driver();
         $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
@@ -59,7 +62,9 @@ class Connection extends mysqli
                 $config->port
             );
         }
-        $this->set_charset($config->charset);
+        foreach ($config['init'] as $sql) {
+            $this->query($sql);
+        }
         $this->select_db($config->dbname);
     }
 
