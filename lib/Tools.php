@@ -157,7 +157,7 @@ class Tools
             if ($i == $match_pos) {
                 if ($i != $curr_pos) {
                     $result = trim(substr($str_original, $curr_pos, $i - $curr_pos));
-                    if (strncasecmp($result, 'delimiter', 9) == 0 && (strlen($result) == 9 || FALSE !== strpos(" \t", $result{9}))) {
+                    if (strncasecmp($result, 'delimiter', 9) == 0 && (strlen($result) == 9 || FALSE !== strpos(" \t", $result[9]))) {
                         $delim = trim(strtolower(substr($result, 10)));
                         if ("" == $delim) {
                             $delim = ";";
@@ -177,23 +177,23 @@ class Tools
                 if (FALSE !== $result) {
                     break;
                 }
-            } else if ($str{$i} == "'") {
+            } else if ($str[$i] == "'") {
                 for ($j = $i + 1; $j < $len; ++$j) {
-                    if ($str{$j} == "\\") ++$j;
-                    else if ($str{$j} == "'") break;
+                    if ($str[$j] == "\\") ++$j;
+                    else if ($str[$j] == "'") break;
                 }
                 $i = $j;
-            } else if ($str{$i} == "\"") {
+            } else if ($str[$i] == "\"") {
                 for ($j = $i + 1; $j < $len; ++$j) {
-                    if ($str{$j} == "\\") ++$j;
-                    else if ($str{$j} == "\"") break;
+                    if ($str[$j] == "\\") ++$j;
+                    else if ($str[$j] == "\"") break;
                 }
                 $i = $j;
-            } else if ($i < $len - 1 && $str{$i} == "/" && $str{$i + 1} == "*") {
+            } else if ($i < $len - 1 && $str[$i] == "/" && $str[$i + 1] == "*") {
                 $j = $i + 2;
                 while ($j) {
                     $j = strpos($str, "*/", $j);
-                    if (!$j || $str{$j - 1} != "\\") {
+                    if (!$j || $str[$j - 1] != "\\") {
                         break;
                     }
                     ++$j;
@@ -202,26 +202,26 @@ class Tools
                     break;
                 }
                 $i = $j + 1;
-            } else if ($str{$i} == "#") {
+            } else if ($str[$i] == "#") {
                 $j = strpos($str, "\n", $i + 1) or strpos($str, "\r", $i + 1);
                 if (!$j) {
                     break;
                 }
                 $i = $j;
-            } else if ($i < $len - 2 && $str{$i} == "-" && $str{$i + 1} == "-" && FALSE !== strpos(" \t", $str{$i + 2})) {
+            } else if ($i < $len - 2 && $str[$i] == "-" && $str[$i + 1] == "-" && FALSE !== strpos(" \t", $str[$i + 2])) {
                 $j = strpos($str, "\n", $i + 3) or strpos($str, "\r", $i + 1);
                 if (!$j) {
                     break;
                 }
                 $i = $j;
-            } else if ($str{$i} == "\\") {
+            } else if ($str[$i] == "\\") {
                 ++$i;
             }
         }
 
         if (FALSE === $result && $curr_pos < $len) {
             $result = trim(substr($str_original, $curr_pos));
-            if (strncasecmp($result, 'delimiter', 9) == 0 && (strlen($result) == 9 || FALSE !== strpos(" \t", $result{9}))) {
+            if (strncasecmp($result, 'delimiter', 9) == 0 && (strlen($result) == 9 || FALSE !== strpos(" \t", $result[9]))) {
                 $delim = trim(strtolower(substr($result, 10)));
                 if ("" == $delim) {
                     $delim = ";";
