@@ -13,8 +13,12 @@
             "role": "Developer"
         }
     ],
+    "config": {
+        "platform": {
+            "php": ">=7.4"
+        }
+    },
     "require": {
-        "php": "^8.*.*",
         "ext-mysqli": "*"
     },
     "require-dev": {
