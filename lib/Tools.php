@@ -1,32 +1,16 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: polyanin
- * Date: 15.08.2018
- * Time: 16:44
- */
-
-namespace Aplab\Pst\Lib;
+<?php namespace Aplab\Pst\Lib;
 
 use Throwable;
 
-/**
- * Class Tools
- * @package App\Tools
- */
 class Tools
 {
     /**
-     * Являетс ли массив списком с числовыми ключами
+     * Являетс ли массив списком с числовыми ключами?
      * Первый параметр массив для проверки
      * Второй параметр значит что ключи должны представлять собой
      * натуральный ряд чисел начинающийся с нуля и следующий по порядку
-     *
-     * @param array
-     * @param bool $n0
-     * @return boolean
      */
-    public static function is_list(array $array, $n0 = true)
+    public static function is_list(array $array, $n0 = true): bool
     {
         if (empty($array)) {
             return true;
@@ -48,7 +32,7 @@ class Tools
      * @param mixed $key
      * @return bool
      */
-    public static function is_key($key)
+    public static function is_key(mixed $key): bool
     {
         try {
             $valid = array($key => null);
@@ -63,12 +47,8 @@ class Tools
 
     /**
      * Join only nonempty string
-     *
-     * @param string $glue
-     * @param array $pieces
-     * @return string
      */
-    public static function join_ne($glue, array $pieces)
+    public static function join_ne(string $glue, array $pieces): string
     {
         return join($glue, array_filter($pieces));
     }
@@ -250,11 +230,8 @@ class Tools
      *
      * Paths returned by normalize_path() contain no
      * (back)slash at position -1 (ending)
-     *
-     * @param string $path
-     * @return string
      */
-    public static function normalize_path($path)
+    public static function normalize_path(string $path): string
     {
         $parts = array();// Array to build a new path from the good parts
         $path = str_replace('\\', '/', $path);// Replace backslashes with forwardslashes
@@ -290,11 +267,8 @@ class Tools
      *
      * Paths returned by absolute_path() contain no
      * (back)slash at position -1 (ending)
-     *
-     * @param string $path
-     * @return string
      */
-    public static function absolute_path($path)
+    public static function absolute_path(string $path): string
     {
         $path = static::normalize_path($path);
         $tmp = explode('/', $path);

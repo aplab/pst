@@ -1,27 +1,12 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: polyanin
- * Date: 23.07.2018
- * Time: 12:09
- */
-
-namespace Aplab\Pst\Lib;
+<?php namespace Aplab\Pst\Lib;
 
 use Exception;
 use InvalidArgumentException;
 
 class Path
 {
-    /**
-     * @var string
-     */
-    protected $path;
+    protected string $path;
 
-
-    /**
-     * Path constructor.
-     */
     public function __construct()
     {
         $tmp = array();
@@ -38,41 +23,23 @@ class Path
         $this->path = $tmp;
     }
 
-    /**
-     * Implicit conversion to a string
-     *
-     * @param void
-     * @return string
-     */
-    public function toString()
+    public function toString(): string
     {
         return $this->path;
     }
 
-    /**
-     * Explicit conversion to a string
-     *
-     * @param void
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString();
     }
 
-    /**
-     * @see global_functions
-     */
-    public function normalize()
+    public function normalize(): string
     {
         $this->path = Tools::normalize_path($this->path);
         return $this->path;
     }
 
-    /**
-     * @see global_functions
-     */
-    public function absolutize()
+    public function absolutize(): string
     {
         $this->path = Tools::absolute_path($this->path);
         return $this->path;
@@ -84,7 +51,7 @@ class Path
      * @param mixed
      * @return boolean
      */
-    public function contain()
+    public function contain(): bool
     {
         $param = new self(func_get_args());
         $param = $param->toArray();
@@ -106,49 +73,27 @@ class Path
         return sizeof(array_intersect_assoc($param, $path)) === sizeof($path);
     }
 
-    /**
-     * Explicit conversion to array
-     *
-     * @param void
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         return explode('/', $this->path);
     }
 
-    /**
-     * @param void
-     * @return boolean
-     */
-    public function isDir()
+    public function isDir(): bool
     {
         return is_dir($this->path);
     }
 
-    /**
-     * @param void
-     * @return boolean
-     */
-    public function isFile()
+    public function isFile(): bool
     {
         return is_file($this->path);
     }
 
-    /**
-     * @param void
-     * @return boolean
-     */
-    public function isLink()
+    public function isLink(): bool
     {
         return is_link($this->path);
     }
 
-    /**
-     * @param void
-     * @return boolean
-     */
-    public function fileExists()
+    public function fileExists(): bool
     {
         clearstatcache();
         return file_exists($this->path);
@@ -158,11 +103,10 @@ class Path
      * clearstatcache() не требуется, функция unlink() очистит данный кэш
      * автоматически. http://ru2.php.net/manual/ru/function.clearstatcache.php
      *
-     * @param void
      * @return boolean
      * @throws Exception
      */
-    public function unlink()
+    public function unlink(): bool
     {
         if (!$this->fileExists()) {
             return true;
@@ -175,22 +119,12 @@ class Path
         return true;
     }
 
-    /**
-     * @param void
-     * @return Path
-     */
-    public function dirname()
+    public function dirname(): Path
     {
         return new self(dirname($this->path));
     }
 
-    /**
-     * Вычитает путь, переданный в параметре, из текущего
-     *
-     * @param void
-     * @return Path
-     */
-    public function substract()
+    public function substract(): Path
     {
         $param = new self(func_get_args());
         if (!$this->contain($param)) {
@@ -199,13 +133,7 @@ class Path
         return new self(array_diff_assoc($this->toArray(), $param->toArray()));
     }
 
-    /**
-     * Returns extension or null
-     *
-     * @param void
-     * @return string
-     */
-    public function extension($lcase = null)
+    public function extension($lcase = null): ?string
     {
         $extension = pathinfo($this->path, PATHINFO_EXTENSION);
         return $extension ? ($lcase ? strtolower($extension) : $extension) : null;

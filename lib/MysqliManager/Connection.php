@@ -1,13 +1,4 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: polyanin
- * Date: 13.09.2018
- * Time: 17:07
- */
-
-namespace Aplab\Pst\Lib\MysqliManager;
-
+<?php namespace Aplab\Pst\Lib\MysqliManager;
 
 use Aplab\Pst\Lib\Tools;
 use mysqli;
@@ -68,28 +59,18 @@ class Connection extends mysqli
         $this->select_db($config->dbname);
     }
 
-    /**
-     * @return mysqli_driver
-     */
-    public function getDriver()
+    public function getDriver(): mysqli_driver
     {
         $hash = spl_object_hash($this);
         return $this->{$hash}['driver'];
     }
 
-    /**
-     * execute query
-     *
-     * @param string $sql
-     * @param int $result_mode
-     * @return Result
-     */
-    public function query($sql, $result_mode = MYSQLI_STORE_RESULT)
+    public function query(string $query, $result_mode = MYSQLI_STORE_RESULT): Result
     {
         if (MysqliManager::$debug) {
-            $trace = debug_backtrace(null, 2);
+            $trace = debug_backtrace(0, 2);
             $trace = array_pop($trace);
-            $service_info = 'sql: ' . preg_replace('/\\s{2,}/', ' ', $sql);
+            $service_info = 'sql: ' . preg_replace('/\\s{2,}/', ' ', $query);
             if ($trace) {
                 $service_info = ' line: ' . $trace['line'] . ' ' . $service_info;
                 $service_info = 'file: ' . $trace['file'] . $service_info;
@@ -97,19 +78,18 @@ class Connection extends mysqli
             var_dump($service_info);
         }
         try {
-            $this->real_query($sql);
-            /** @noinspection PhpMethodParametersCountMismatchInspection */
+            $this->real_query($query);
             return new Result($this);
         } catch (mysqli_sql_exception $e) {
-            /** @noinspection PhpUndefinedFieldInspection */
-            $e->sql   = preg_replace('/\\s{2,}/', ' ', $sql);
+            /** @noinspection PhpDynamicFieldDeclarationInspection */
+            $e->sql   = preg_replace('/\\s{2,}/', ' ', $query);
             $trace    = $e->getTrace();
             $function = __FUNCTION__;
             $class    = get_class($this);
             $break    = false;
             foreach ($trace as $data_item) {
                 if ($break) {
-                    /** @noinspection PhpUndefinedFieldInspection */
+                    /** @noinspection PhpDynamicFieldDeclarationInspection */
                     $e->called_from = $data_item;
                     break;
                 }
@@ -123,27 +103,16 @@ class Connection extends mysqli
         }
     }
 
-    /**
-     * mysql_real_escape_string wrapper shortcut
-     *
-     * @param string $string
-     * @return string|false
-     */
-    public function e($string)
+    public function e(string $string): false|string
     {
         return $this->real_escape_string($string);
     }
 
     /**
      * mysql_real_escape_string wrapper advanced and shortcut
-     * It handles multi-dimensional arrays recursively.
-     *
-     * @param string|array $string
-     * @param bool $quote
-     * @param bool $double
-     * @return false|string
+     * It handles multidimensional arrays recursively.
      */
-    public function q($string, $quote = true, $double = true)
+    public function q(array|string $string, bool $quote = true, bool $double = true): array|string
     {
         if (is_array($string)) {
             $db = $this;
@@ -164,11 +133,8 @@ class Connection extends mysqli
     /**
      * Put values into backquotes
      * Processes multidimensional arrays recursively.
-     *
-     * @param string|array $value
-     * @return array|string
      */
-    public function bq($value)
+    public function bq(array|string $value): array|string
     {
         if (is_array($value)) {
             $db = $this;
@@ -182,11 +148,8 @@ class Connection extends mysqli
 
     /**
      * Returns a list of tables in the current database
-     *
-     * @param boolean $reload
-     * @return array
      */
-    public function getListTables($reload = false)
+    public function getListTables(bool $reload = false): array
     {
         $hash = spl_object_hash($this);
         if ($reload || (!isset($this->data['list_tables']))) {
@@ -197,11 +160,8 @@ class Connection extends mysqli
 
     /**
      * Returns a list of table fields in the current database
-     *
-     * @param void
-     * @return array
      */
-    public function listFields($table)
+    public function listFields(string $table): array
     {
         $hash = spl_object_hash($this);
         if (!isset($this->data['list_fields'][$table])) {
@@ -214,23 +174,16 @@ class Connection extends mysqli
 
     /**
      * Returns true if table exists into current database, false otherwise
-     *
-     * @param string $table
-     * @param boolean $reload
-     * @return boolean
      */
-    public function tableExists($table, $reload = false)
+    public function tableExists(string $table, bool $reload = false): bool
     {
         return in_array($table, $this->getListTables($reload));
     }
 
     /**
      * Returns true if table is empty, false otherwise
-     *
-     * @param string $table
-     * @return boolean
      */
-    public function isEmpty($table)
+    public function isEmpty(string $table): bool
     {
         /** @noinspection SqlNoDataSourceInspection */
         /** @noinspection SqlResolve */
@@ -239,14 +192,11 @@ class Connection extends mysqli
     }
 
     /**
-     * @param $table
-     * @param bool|false $post_check
      * @throws Exception
      */
-    public function drop($table, $post_check = false)
+    public function drop(string $table, bool $post_check = false)
     {
         /** @noinspection SqlNoDataSourceInspection */
-        /** @noinspection SqlResolve */
         $this->query('DROP TABLE `' . $this->e($table) . '`');
         if ($post_check && $this->tableExists($table, true)) {
             $msg = 'Unable to drop table';
@@ -255,14 +205,11 @@ class Connection extends mysqli
     }
 
     /**
-     * @param $table
-     * @param bool|false $post_check
      * @throws Exception
      */
-    public function dropIfExists($table, $post_check = false)
+    public function dropIfExists(string $table, bool $post_check = false)
     {
         /** @noinspection SqlNoDataSourceInspection */
-        /** @noinspection SqlResolve */
         $this->query('DROP TABLE IF EXISTS `' . $this->e($table) . '`');
         if ($post_check && $this->tableExists($table, true)) {
             $msg = 'Unable to drop table';
@@ -272,16 +219,11 @@ class Connection extends mysqli
 
     /**
      * Delete the table if it is empty
-     *
-     * @param $table
-     * @param bool|false $post_check
-     * @throws Exception
      */
-    public function dropIfEmpty($table, $post_check = false)
+    public function dropIfEmpty(string $table, bool $post_check = false)
     {
         if ($this->isEmpty($table)) {
             /** @noinspection SqlNoDataSourceInspection */
-            /** @noinspection SqlResolve */
             $this->query('DROP TABLE IF EXISTS `' . $this->e($table) . '`');
             if ($post_check && $this->tableExists($table, true)) {
                 $msg = 'Unable to drop table';
@@ -292,15 +234,11 @@ class Connection extends mysqli
 
     /**
      * Split a string that represents multiple sql queries, separated by a separator ";"
-     *
-     * @param string $query
-     * @return array
      */
-    public function splitMultiQuery($query)
+    public function splitMultiQuery(string $query): array
     {
         $ret = array();
         $token = Tools::my_strtok($query, ";");
-
         while ($token) {
             $prev = $token;
             $ret[] = $prev;
@@ -310,17 +248,13 @@ class Connection extends mysqli
                 return $ret;
             }
         }
-
         return $ret;
     }
 
     /**
      * Returns current database name
-     *
-     * @param void
-     * @return string
      */
-    public function selectSchema()
+    public function selectSchema(): string
     {
         return $this->query('select schema()')->fetch_one();
     }

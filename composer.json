@@ -15,14 +15,14 @@
     ],
     "config": {
         "platform": {
-            "php": "7.4"
+            "php": "8.2"
         }
     },
     "require": {
         "ext-mysqli": "*"
     },
     "require-dev": {
-        "symfony/http-kernel": "^4.3"
+        "symfony/http-kernel": "^5.4"
     },
 
     "autoload": {
