@@ -22,7 +22,7 @@
         "ext-mysqli": "*"
     },
     "require-dev": {
-        "symfony/http-kernel": "^5.4"
+        "symfony/http-kernel": "^5.4 || ^4.0"
     },
 
     "autoload": {
