@@ -13,12 +13,7 @@ use mysqli_result;
 
 class Result extends mysqli_result
 {
-    /**
-     * Returns the value of the first column of the first row of the result
-     *
-     * @return int|NULL
-     */
-    public function fetch_one()
+    public function fetch_one(): mixed
     {
         $row = $this->fetch_row();
         if (is_array($row) && isset($row[0])) {
@@ -27,25 +22,12 @@ class Result extends mysqli_result
         return null;
     }
 
-    /**
-     * Selects all rows from the result set and places them in associative array
-     *
-     * @param void
-     * @return array
-     */
-    public function fetch_assoc_all()
+    public function fetch_assoc_all(): array
     {
         return $this->fetch_all(MYSQLI_ASSOC);
     }
 
-    /**
-     * Selects all rows from the result set and places them in object
-     *
-     * @param string
-     * @param array $params
-     * @return array
-     */
-    public function fetch_object_all($class = null, array $params = null)
+    public function fetch_object_all($class = null, array $params = null): array
     {
         $ret = array();
         if (is_null($class) && is_null($params)) {
@@ -72,13 +54,7 @@ class Result extends mysqli_result
         return $ret;
     }
 
-    /**
-     * Returns a specific column
-     *
-     * @param void
-     * @return array|false
-     */
-    public function fetch_col($n = null)
+    public function fetch_col($n = null): array
     {
         $n = $n ?: 0;
         $ret = array();
@@ -90,13 +66,7 @@ class Result extends mysqli_result
         return $ret;
     }
 
-    /**
-     * Returns the first line of the result
-     *
-     * @param void
-     * @return array
-     */
-    public function fetch_assoc_first()
+    public function fetch_assoc_first(): false|array|null
     {
         return $this->fetch_assoc();
     }

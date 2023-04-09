@@ -131,7 +131,7 @@ class Connection extends mysqli
     }
 
     /**
-     * Put values into backquotes
+     * Put values into back-quotes
      * Processes multidimensional arrays recursively.
      */
     public function bq(array|string $value): array|string
@@ -194,7 +194,7 @@ class Connection extends mysqli
     /**
      * @throws Exception
      */
-    public function drop(string $table, bool $post_check = false)
+    public function drop(string $table, bool $post_check = false): void
     {
         /** @noinspection SqlNoDataSourceInspection */
         $this->query('DROP TABLE `' . $this->e($table) . '`');
@@ -207,7 +207,7 @@ class Connection extends mysqli
     /**
      * @throws Exception
      */
-    public function dropIfExists(string $table, bool $post_check = false)
+    public function dropIfExists(string $table, bool $post_check = false): void
     {
         /** @noinspection SqlNoDataSourceInspection */
         $this->query('DROP TABLE IF EXISTS `' . $this->e($table) . '`');
@@ -219,8 +219,9 @@ class Connection extends mysqli
 
     /**
      * Delete the table if it is empty
+     * @throws Exception
      */
-    public function dropIfEmpty(string $table, bool $post_check = false)
+    public function dropIfEmpty(string $table, bool $post_check = false): void
     {
         if ($this->isEmpty($table)) {
             /** @noinspection SqlNoDataSourceInspection */
