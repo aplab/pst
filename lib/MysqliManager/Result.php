@@ -76,13 +76,8 @@ class Result extends mysqli_result
      * Если $key не задан то обычный индекс по порядку.
      * Если $value не задан то вся строка.
      * Третий параметр если false и при этом задан ключ, то ключа не будет в подмассиве результата
-     *
-     * @param string $key
-     * @param string $value
-     * @param bool $key_present
-     * @return array
      */
-    public function fetch_all_index($key = null, $value = null, $key_present = true)
+    public function fetch_all_index($key = null, $value = null, $key_present = true): array
     {
         if (is_null($key) && is_null($value)) {
             return $this->fetch_assoc_all();
